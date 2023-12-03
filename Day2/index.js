@@ -1,35 +1,31 @@
 import fs from "fs";
 
 const input = fs.readFileSync("./example.txt", "utf-8").trim().split("\r\n");
-const red = 12;
-const green = 13;
-const blue = 14;
-let Game = {};
-let ID = 0;
 
-// for (let i = 0; i < input.length; i++) {
-//   ID[i] = Number(input[i].substring(5, 6));
-// }
-// Hämtar game-ID.
+let ID = 0;
+let colors = { red: 0, blue: 0, green: 0 };
+let game = {};
 
 for (const element of input) {
-  ID++;
-  let first = element
-    .substring(element.indexOf(":") + 1, element.indexOf(";"))
-    .trim()
-    .split(",");
-
-  let second = element
-    .substring(element.indexOf(";") + 1, element.lastIndexOf(";"))
-    .trim()
-    .split(",");
-
-  let third = element
-    .substring(element.lastIndexOf(";") + 1)
-    .trim()
-    .split(",");
-
-  Game[ID] = [...first, ...second, ...third];
+  game = element.split(": ")[1].split("; ");
 }
 
-console.log(Game);
+const toNumber = (value) => {
+  return Number(value);
+};
+
+for (const element of game) {
+  let amount = element.match(/\d/g).map(toNumber);
+  let color = element.match(/\b([a-zA-Z]+)\b/g);
+  //        /b för att få ut hela ord, ([a-zA-Z]+) fångar orden i grupp.
+
+  for (let i = 0; i < color.length; i++) {
+    colors[color[i].trim()] += amount[i];
+  }
+
+  if (colors["red"] > 12 || colors["green"] > 13 || colors["blue"] > 14) {
+    ID++;
+  }
+}
+
+console.log(game);
